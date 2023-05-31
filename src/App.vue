@@ -1,17 +1,27 @@
 <script>
 import Card from './components/Card.vue'
+import { ref }  from 'vue'
 export default {
   name: 'WebMemoryGamev2',
   components: {
     Card
   },
   setup() {
-    const TablicaKart = []
+    const TablicaKart = ref([])
     for(let i = 0; i< 16; i++){
-      TablicaKart.push(i)
+      TablicaKart.value.push({
+        value: i,
+        visible:false,
+        position: i
+      
+      })
+    }
+    const odwrocKarte = (payload) => {
+      TablicaKart.value[payload.position].visible = true
     }
     return{
-      TablicaKart
+      TablicaKart,
+      odwrocKarte
     }
   }
 }
@@ -23,7 +33,10 @@ export default {
   <Card 
   v-for = "karta in TablicaKart" 
   :key="`karta-${index}`" 
-  :value="karta"/>
+  :value="karta.value"
+  :visible="karta.visible"
+  @wybierz-karte="odwrocKarte"
+  :position = "karta.position"/>
 </section>
 </template>
 
