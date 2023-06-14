@@ -3,6 +3,8 @@ import Card from './components/Card.vue'
 import { ref }  from 'vue'
 import { watch } from 'vue'
 import { computed } from 'vue'
+import _ from 'lodash'
+
 export default {
   name: 'WebMemoryGamev2',
   components: {
@@ -26,7 +28,24 @@ export default {
         return pozostaleKarty
     })
 
+    const restartGry = () => {
+    tasujTablice()
+    TablicaKart.value = TablicaKart.value.map(
+      (karta, index) => {
+        return {
+          ...karta,
+          dopasowana: false,
+          visible: false,
+          position: index
+        }
+      }
+    )
+  }
 
+
+  const tasujTablice = () => {
+    TablicaKart.value = _.shuffle(TablicaKart.value)
+  }
 
 
 
@@ -79,7 +98,9 @@ export default {
       odwrocKarte,
       rekaGracza,
       pozostalePary,
-      status
+      status,
+      restartGry,
+      tasujTablice
     }
   }
 }
@@ -98,6 +119,7 @@ export default {
 </section>
 <h2>{{ rekaGracza }}</h2>
 <p>{{ status }}</p>
+<button @click = "restartGry">Restart gry</button>
 </template>
 
 <style scoped>
