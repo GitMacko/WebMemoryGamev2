@@ -55,7 +55,7 @@ export default {
            return pozostaleKarty / 2
      })*/
 
-    for(let i = 0; i< 16; i++){
+ /*   for(let i = 0; i< 16; i++){
       TablicaKart.value.push({
         value: 5,
         visible:false,
@@ -63,7 +63,40 @@ export default {
         dopasowana: false
       
       })
-    }
+    }*/
+const zestawy = [1,2,3,4,5,6,7,8]
+
+zestawy.forEach(item => {
+  TablicaKart.value.push({
+    value:item,
+    visible:false,
+    position:null,
+    matched:false
+  })
+
+  TablicaKart.value.push({
+    value:item,
+    visible:false,
+    position:null,
+    matched:false
+  })
+
+  TablicaKart.value = TablicaKart.value.map((karta,index) =>
+{
+  return {
+    ...karta,
+    position:index
+  }
+})
+})
+
+
+
+
+
+
+
+
     const odwrocKarte = (payload) => {
       TablicaKart.value[payload.position].visible = true
       if(rekaGracza.value[0]){
