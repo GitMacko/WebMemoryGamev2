@@ -2,6 +2,7 @@
 import Card from './components/Card.vue'
 import { ref }  from 'vue'
 import { watch } from 'vue'
+import { computed } from 'vue'
 export default {
   name: 'WebMemoryGamev2',
   components: {
@@ -11,11 +12,36 @@ export default {
     const TablicaKart = ref([])
     const rekaGracza = ref([])
 
+    const status = computed(() =>{
+      if(pozostalePary.value == 0) {
+        return 'Wygrywasz!'
+      } else {
+        return `Pozostałe karty: ${pozostalePary.value}`
+     }  } )
+
+    const pozostalePary = computed(() => {
+      const pozostaleKarty = TablicaKart.value.filter(
+        karta => karta.dopasowana === false).length
+
+        return pozostaleKarty
+    })
+
+
+
+
+
+ /*   const pozostalePary = computed(() => {
+      const pozostaleKarty = TablicaKart.value.filter
+      (karta => karta.dopasowana === false).length
+           return pozostaleKarty / 2
+     })*/
+
     for(let i = 0; i< 16; i++){
       TablicaKart.value.push({
         value: 5,
         visible:false,
-        position: i
+        position: i,
+        dopasowana: false
       
       })
     }
@@ -51,7 +77,9 @@ export default {
     return{
       TablicaKart,
       odwrocKarte,
-      rekaGracza
+      rekaGracza,
+      pozostalePary,
+      status
     }
   }
 }
@@ -69,6 +97,7 @@ export default {
   :position = "karta.position"/>
 </section>
 <h2>{{ rekaGracza }}</h2>
+<p>{{ status }}</p>
 </template>
 
 <style scoped>
