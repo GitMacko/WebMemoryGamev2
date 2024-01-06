@@ -64,6 +64,7 @@ export default {
       
       })
     }*/
+
 const zestawy = [1,2,3,4,5,6,7,8]
 
 zestawy.forEach(item => {
@@ -101,8 +102,7 @@ zestawy.forEach(item => {
       TablicaKart.value[payload.position].visible = true
       if(rekaGracza.value[0]){
         if(
-      rekaGracza.value[0].position ===
-    payload.position && rekaGracza.value[0].faceValue === payload.faceValue)
+      rekaGracza.value[0].position ===  payload.position && rekaGracza.value[0].faceValue === payload.faceValue)
     { return } else { }
         rekaGracza.value[1]= payload
       } else {
@@ -140,7 +140,9 @@ zestawy.forEach(item => {
 </script>
 
 <template>
-<h1>MemorizeIT</h1>
+<h1 class = "Tytul" >MemorizeIT</h1>
+<body>
+<p class = "status">{{ status }}</p>
 <section class = "plansza">
   <Card 
   v-for = "karta in TablicaKart" 
@@ -150,21 +152,53 @@ zestawy.forEach(item => {
   @wybierz-karte="odwrocKarte"
   :position = "karta.position"/>
 </section>
-<h2>{{ rekaGracza }}</h2>
-<p>{{ status }}</p>
-<button @click = "restartGry">Restart gry</button>
+<button class = "restart" @click = "restartGry">Restart gry</button>
+</body>
+
 </template>
 
 <style scoped>
+html{
+  margin:0;
+  padding:0;
+}
+p{
+  position:absolute;
+  top:0;
+  margin-left: 40px;
+  margin-top:10px;
+  font-size:30px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: lightgreen;
+}
+.restart{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.Tytul {
+  font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 5rem;
+  color: red;
+}
+body {
+  background-image: url('assets/tlo.jpg');
+  background: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin:0;
+  padding:0;
+}
+
 header {
   line-height: 1.5;
 }
 
 .plansza{
   display:grid;
-  grid-template-columns:100px 100px 100px 100px;
-  grid-template-rows: 100px 100px 100px 100px;
-  grid-column-gap: 30px;
-  grid-row-gap: 30px;
+  grid-template-columns:120px 120px 120px 120px;
+  grid-template-rows: 120px 120px 120px 120px;
+  grid-column-gap: 35px;
+  grid-row-gap: 35px;
+  margin-left: 55px;
 }
 </style>
