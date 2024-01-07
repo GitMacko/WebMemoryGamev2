@@ -65,21 +65,23 @@ export default {
       })
     }*/
 
-const zestawy = [1,2,3,4,5,6,7,8]
+const zestawy = ['x','o','om','r','plus','zawijas','sin','t']
 
 zestawy.forEach(item => {
   TablicaKart.value.push({
     value:item,
     visible:false,
     position:null,
-    matched:false
+    matched:false,
+    dopasowana: false
   })
 
   TablicaKart.value.push({
     value:item,
     visible:false,
     position:null,
-    matched:false
+    matched:false,
+    dopasowana: false
   })
 
   TablicaKart.value = TablicaKart.value.map((karta,index) =>
@@ -133,7 +135,8 @@ zestawy.forEach(item => {
       pozostalePary,
       status,
       restartGry,
-      tasujTablice
+      tasujTablice,
+      
     }
   }
 }
@@ -150,14 +153,24 @@ zestawy.forEach(item => {
   :value="karta.value"
   :visible="karta.visible"
   @wybierz-karte="odwrocKarte"
-  :position = "karta.position"/>
+  :position = "karta.position"
+  :dopasowana = "karta.dopasowana"/>
 </section>
-<button class = "restart" @click = "restartGry">Restart gry</button>
+<button class = "restart" @click = "restartGry">
+<img src="assets/restart.png" alt = "Restart" width="16" height="16"/></button>
 </body>
 
 </template>
 
 <style scoped>
+.restart {
+  background-color: darkviolet;
+  border-radius: 5px;
+  padding: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
 html{
   margin:0;
   padding:0;
