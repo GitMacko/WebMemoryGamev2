@@ -1,18 +1,34 @@
 <script>
 import Card from './components/Card.vue'
-import { ref }  from 'vue'
+import timer from './components/timer.vue'
+import { TransitionGroup, ref }  from 'vue'
 import { watch } from 'vue'
 import { computed } from 'vue'
-import _ from 'lodash'
+import { odpalConfetti } from './confetti.js'
+
+import  stworzPlansze  from './funkcjonalnosci/stworzPlansze'
+import  stworzGre  from './funkcjonalnosci/stworzGre'
+import  talia1   from './data/talia1.json'
 
 export default {
   name: 'WebMemoryGamev2',
   components: {
-    Card
-  },
+    Card,
+    TransitionGroup,
+    timer
+},
+
   setup() {
-    const TablicaKart = ref([])
+
+    const { TablicaKart } = stworzPlansze(talia1)
+    const { nowyGracz, nowaGra, restartGry, resetTimer } = stworzGre(TablicaKart)
     const rekaGracza = ref([])
+    
+    const resetSignal = ref(false);
+
+
+
+
 
     const status = computed(() =>{
       if(pozostalePary.value == 0) {
@@ -28,78 +44,6 @@ export default {
         return pozostaleKarty
     })
 
-    const restartGry = () => {
-    tasujTablice()
-    TablicaKart.value = TablicaKart.value.map(
-      (karta, index) => {
-        return {
-          ...karta,
-          dopasowana: false,
-          visible: false,
-          position: index
-        }
-      }
-    )
-  }
-
-
-  const tasujTablice = () => {
-    TablicaKart.value = _.shuffle(TablicaKart.value)
-  }
-
-
-
- /*   const pozostalePary = computed(() => {
-      const pozostaleKarty = TablicaKart.value.filter
-      (karta => karta.dopasowana === false).length
-           return pozostaleKarty / 2
-     })*/
-
- /*   for(let i = 0; i< 16; i++){
-      TablicaKart.value.push({
-        value: 5,
-        visible:false,
-        position: i,
-        dopasowana: false
-      
-      })
-    }*/
-
-const zestawy = ['x','o','om','r','plus','zawijas','sin','t']
-
-zestawy.forEach(item => {
-  TablicaKart.value.push({
-    value:item,
-    visible:false,
-    position:null,
-    matched:false,
-    dopasowana: false
-  })
-
-  TablicaKart.value.push({
-    value:item,
-    visible:false,
-    position:null,
-    matched:false,
-    dopasowana: false
-  })
-
-  TablicaKart.value = TablicaKart.value.map((karta,index) =>
-{
-  return {
-    ...karta,
-    position:index
-  }
-})
-})
-
-
-
-
-
-
-
-
     const odwrocKarte = (payload) => {
       TablicaKart.value[payload.position].visible = true
       if(rekaGracza.value[0]){
@@ -111,7 +55,11 @@ zestawy.forEach(item => {
         rekaGracza.value[0] = payload
       }
     }
-
+    watch( pozostalePary, currentValue => {
+      if(currentValue === 0 ) {
+        odpalConfetti()
+      }
+    })
     watch(rekaGracza, currentValue => { 
     if (currentValue.length === 2){
       const kartaPierwsza = currentValue[0]
@@ -135,7 +83,10 @@ zestawy.forEach(item => {
       pozostalePary,
       status,
       restartGry,
-      tasujTablice,
+      nowaGra,
+      nowyGracz,
+      resetSignal,
+      resetTimer
       
     }
   }
@@ -144,25 +95,40 @@ zestawy.forEach(item => {
 
 <template>
 <h1 class = "Tytul" >MemorizeIT</h1>
+
+
 <body>
-<p class = "status">{{ status }}</p>
-<section class = "plansza">
+ <p class = "status">{{ status }} <timer :resetSignal = "resetSignal" /> </p>
+<transition-group tag ="section" class = "plansza" name ="tasowanie">
   <Card 
   v-for = "karta in TablicaKart" 
-  :key="`karta-${index}`" 
+  :key="`${karta.value}-${karta.variant}`" 
   :value="karta.value"
   :visible="karta.visible"
   @wybierz-karte="odwrocKarte"
   :position = "karta.position"
   :dopasowana = "karta.dopasowana"/>
-</section>
-<button class = "restart" @click = "restartGry">
+</transition-group >
+
+<button class = "restart" v-if = "nowyGracz" @click = "nowaGra">
+<img src="assets/restart.png" alt = "Nowa gra" width="16" height="16"/></button>
+<button class = "restart" v-else @click = "restartGry">
 <img src="assets/restart.png" alt = "Restart" width="16" height="16"/></button>
 </body>
 
 </template>
 
 <style scoped>
+.status {
+  display: flex;
+  align-items: center;
+  
+}
+.tasowanie-move{
+  transition: transform 0.6s ease-in;
+
+
+}
 .restart {
   background-color: darkviolet;
   border-radius: 5px;
